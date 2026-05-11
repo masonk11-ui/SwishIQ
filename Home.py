@@ -6,6 +6,7 @@ from utils.team_stats import add_possessions
 from datetime import datetime
 import matplotlib.pyplot as plt
 import pandas as pd
+from zoneinfo import ZoneInfo
 
 st.title("SwishIQ")
 st.write("Welcome to SwishIQ. Tracking team and player performance over the course of " \
@@ -21,7 +22,7 @@ stats_to_include = ['PTS', 'FG_PCT', 'FG3_PCT', 'FT_PCT', 'OREB',
 
 
 
-now = datetime.now().strftime("%m/%d %I:%M %p")
+now = datetime.now(ZoneInfo("America/Chicago")).strftime("%m/%d %I:%M %p")
 
 team_stats_df = build_team_stats(team_game_logs, stats_to_include)
 team_ratings_df = build_team_ratings(team_game_logs)
