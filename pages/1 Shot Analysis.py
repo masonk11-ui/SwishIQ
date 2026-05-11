@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from utils.court_plot import draw_court
 import pandas as pd
 from utils.data_loader import get_playoff_shots
-from utils.court_plot import classify_shot_loc
+
 
 st.title("Shot Analysis")
 st.write("Explore shot location, efficiency, and scoring tendencies across the 2026 NBA Playoffs.")
@@ -12,6 +12,16 @@ st.divider()
 @st.cache_data
 def get_shots():
     return get_playoff_shots()
+
+
+def classify_shot_loc(x):
+    if x < -80:
+        return 'Left'
+    elif x > 80:
+        return 'Right'
+    else:
+        return 'Center'
+
 
 shots = get_shots()
 
