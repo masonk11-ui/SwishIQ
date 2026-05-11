@@ -4,6 +4,55 @@ from utils.court_plot import draw_court
 import pandas as pd
 from utils.data_loader import get_playoff_shots
 
+st.markdown("""
+<style>
+.glass-card {
+    background: rgba(255, 255, 255, 0.055);
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    border-radius: 14px;
+    padding: 16px 14px;
+    min-height: 135px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.16);
+}
+
+.metric-label {
+    color: #B8C2CC;
+    font-size: 0.82rem;
+    font-weight: 600;
+    margin-bottom: 14px;
+    line-height: 1.25;
+    min-height: 34px;
+}
+
+.metric-value {
+    color: white;
+    font-size: 1.95rem;
+    font-weight: 700;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+.metric-attempts {
+    color: #8A96A8;
+    font-size: 0.78rem;
+    margin-top: 12px;
+    white-space: nowrap;
+}
+</style>
+""", unsafe_allow_html=True)
+
+def glass_metric_card(label, value, attempts=None):
+    attempts_html = f'<div class="metric-attempts">{attempts} attempts</div>' if attempts is not None else ""
+
+    st.markdown(f"""
+    <div class="glass-card">
+        <div class="metric-label">{label}</div>
+        <div class="metric-value">{value}</div>
+        {attempts_html}
+    </div>
+    """, unsafe_allow_html=True)
+
+
 
 st.title("Shot Analysis")
 st.write("Explore shot location, efficiency, and scoring tendencies across the 2026 NBA Playoffs.")
@@ -104,20 +153,23 @@ cols = st.columns(len(zone_stats))
 
 
 for i, row in zone_stats.reset_index(drop=True).iterrows():
-    cols[i].metric(
-        label=row["SHOT_ZONE_RANGE"],
-        value=f"{row['fg_pct']}%"
-      #  delta=f"{row['attempts']} shots"
-    )
+    with cols[i]:
+        glass_metric_card(
+            str(row["SHOT_ZONE_RANGE"]),
+            f"{row['fg_pct']}%",
+            row["attempts"]
+        )
 
 st.subheader("FG% by Shot Side")
-cols = st.columns(len(side_stats))
+cols = st.columns(5)
 
 for i, row in side_stats.reset_index(drop=True).iterrows():
-    cols[i].metric(
-        label=row["SHOT_SIDE"],
-        value=f"{row['fg_pct']}%"
-    )
+    with cols[i]:
+        glass_metric_card(
+            str(row["SHOT_SIDE"]),
+            f"{row['fg_pct']}%",
+            row["attempts"]
+        )
 
 st.divider()
 
