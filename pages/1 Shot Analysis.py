@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 from utils.court_plot import draw_court
 import pandas as pd
 from utils.data_loader import get_playoff_shots
+from utils.court_plot import classify_shot_loc
 
 st.title("Shot Analysis")
 st.write("Explore shot location, efficiency, and scoring tendencies across the 2026 NBA Playoffs.")
@@ -33,10 +34,9 @@ with st.sidebar:
 if selected_player != "All Players":
     filtered = filtered[filtered["PLAYER_NAME"] == selected_player]
 
+filtered["SHOT_SIDE"] = filtered["LOC_X"].apply(classify_shot_loc).astype(str)
 made = filtered[filtered["SHOT_MADE_FLAG"] == 1]
 missed = filtered[filtered["SHOT_MADE_FLAG"] == 0]
-
-st.subheader('FG% by Shot Range')
 
 zone_stats = (
     filtered
@@ -49,7 +49,18 @@ zone_stats = (
     .reset_index()
 )
 
-order = [
+side_stats = (
+    filtered
+    .dropna(subset=["SHOT_SIDE"])
+    .groupby("SHOT_SIDE")
+    .agg(
+        attempts=("SHOT_MADE_FLAG", "count"),
+        fg_pct=("SHOT_MADE_FLAG", "mean")
+    )
+    .reset_index()
+)
+
+zone_order = [
     "Less Than 8 ft.",
     "8-16 ft.",
     "16-24 ft.",
@@ -59,20 +70,43 @@ order = [
 
 zone_stats["SHOT_ZONE_RANGE"] = pd.Categorical(
     zone_stats["SHOT_ZONE_RANGE"],
-    categories=order,
+    categories=zone_order,
     ordered=True
 )
 
 zone_stats = zone_stats.sort_values("SHOT_ZONE_RANGE")
 zone_stats["fg_pct"] = (zone_stats["fg_pct"] * 100).round(1)
 
+side_order = ["Left", "Center", "Right"]
+
+side_stats["SHOT_SIDE"] = pd.Categorical(
+    side_stats["SHOT_SIDE"],
+    categories=side_order,
+    ordered=True
+)
+
+side_stats = side_stats.sort_values("SHOT_SIDE")
+
+side_stats["fg_pct"] = (side_stats["fg_pct"] * 100).round(1)
+
+st.subheader('FG% by Shot Range')
 cols = st.columns(len(zone_stats))
+
 
 for i, row in zone_stats.reset_index(drop=True).iterrows():
     cols[i].metric(
         label=row["SHOT_ZONE_RANGE"],
         value=f"{row['fg_pct']}%"
       #  delta=f"{row['attempts']} shots"
+    )
+
+st.subheader("FG% by Shot Side")
+cols = st.columns(len(side_stats))
+
+for i, row in side_stats.reset_index(drop=True).iterrows():
+    cols[i].metric(
+        label=row["SHOT_SIDE"],
+        value=f"{row['fg_pct']}%"
     )
 
 st.divider()

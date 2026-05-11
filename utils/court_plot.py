@@ -27,3 +27,11 @@ def draw_court(ax, color="white", lw=1.5):
 
     # Center arc (top of half court)
     ax.add_patch(Arc((0, 422.5), 120, 120, theta1=180, theta2=0, linewidth=lw, color=color))
+
+def classify_shot_loc(x):
+    if x < -80:
+        return 'Left'
+    elif x > 80:
+        return 'Right'
+    else:
+        return 'Center'
