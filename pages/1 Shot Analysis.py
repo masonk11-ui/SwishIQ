@@ -41,6 +41,38 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
+st.markdown("""
+<style>
+
+/* radio container */
+div[role="radiogroup"] {
+    display: flex;
+    gap: 0.5rem;
+}
+
+/* each option */
+div[role="radiogroup"] label {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.08);
+    padding: 10px 18px;
+    border-radius: 12px;
+    transition: 0.2s ease;
+}
+
+/* hover */
+div[role="radiogroup"] label:hover {
+    background: rgba(255,255,255,0.10);
+}
+
+/* selected */
+div[role="radiogroup"] label[data-selected="true"] {
+    background: rgba(255,255,255,0.14);
+    border: 1px solid rgba(255,255,255,0.18);
+}
+
+</style>
+""", unsafe_allow_html=True)
+
 def glass_metric_card(label, value, attempts=None):
     attempts_html = f'<div class="metric-attempts">{attempts} attempts</div>' if attempts is not None else ""
 
@@ -180,8 +212,34 @@ fig, ax = plt.subplots(figsize=(8, 7))
 fig.patch.set_facecolor("#0A192F")
 ax.set_facecolor("#0A192F")
 
-ax.scatter(missed["LOC_X"], missed["LOC_Y"], c="#e74c3c", s=14, alpha=0.25)
-ax.scatter(made["LOC_X"], made["LOC_Y"], c="#2ecc71", s=14, alpha=0.60)
+chart_type = st.radio(
+    "Shot Chart View",
+    ["Shot Chart", "Shot Frequency"],
+    horizontal=True
+)
+
+if selected_player == "All Players":
+    gridsize = 17
+    mincnt = 1
+else:
+    gridsize = 17
+    mincnt = 1
+
+if chart_type == 'Shot Chart':
+    ax.scatter(missed["LOC_X"], missed["LOC_Y"], c="#e74c3c", s=14, alpha=0.25)
+    ax.scatter(made["LOC_X"], made["LOC_Y"], c="#2ecc71", s=14, alpha=0.60)
+
+
+elif chart_type == 'Shot Frequency':
+    ax.hexbin(
+        filtered['LOC_X'],
+        filtered['LOC_Y'],
+        gridsize=17,
+        cmap="plasma",
+        mincnt=1,
+        alpha=0.85,
+        linewidths=0.15
+    )
 
 draw_court(ax, color="white", lw=1.2)
 
