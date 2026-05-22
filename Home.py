@@ -63,7 +63,8 @@ team_metrics = team_metrics.sort_values(by='NET', ascending=False)
 st.subheader(f'Team Ratings & Per Game Stats — {now} CT')
 
 eliminated_teams = ['Phoenix Suns', 'Denver Nuggets', 'Houston Rockets', 'Portland Trail Blazers',
-                    'Boston Celtics', 'Atlanta Hawks', 'Toronto Raptors', 'Orlando Magic', 'Philadelphia 76ers']
+                    'Boston Celtics', 'Atlanta Hawks', 'Toronto Raptors', 'Orlando Magic', 'Philadelphia 76ers',
+                    'Detroit Pistons', 'Los Angeles Lakers', 'Minnesota Timberwolves']
 
 team_metrics["TEAM"] = team_metrics["TEAM"].apply(
     lambda x: f"{x} (e)" if x in eliminated_teams else x
