@@ -60,7 +60,7 @@ team_metrics = team_metrics.rename(columns = {
 
 team_metrics = team_metrics.sort_values(by='NET', ascending=False)
 
-st.subheader(f'Team Ratings & Per Game Stats — {now} CT')
+st.subheader(f'Team Ratings & Per Game Stats — 2026 NBA Playoffs')
 
 eliminated_teams = ['Phoenix Suns', 'Denver Nuggets', 'Houston Rockets', 'Portland Trail Blazers',
                     'Boston Celtics', 'Atlanta Hawks', 'Toronto Raptors', 'Orlando Magic', 'Philadelphia 76ers',

@@ -302,7 +302,13 @@ play_types_df = team_play_types_freq(
     teams_df
 )
 
-if selected_team != "All Teams":
+show_team_play_style = (
+    selected_team != "All Teams"
+    and selected_opponent == "All Opponents"
+    and selected_player == "All Players"
+)
+
+if show_team_play_style:
 
     team_play_style = play_types_df[
         play_types_df["TEAM_NAME"] == selected_team
@@ -437,4 +443,4 @@ if selected_team != "All Teams":
     )
 
 else:
-    st.info("Select a team to view offensive play style.")
+    st.info("Select one team with All Opponents and All Players to view team-level offensive play style.")
