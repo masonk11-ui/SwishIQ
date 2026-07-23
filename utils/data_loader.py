@@ -21,7 +21,8 @@ def get_playoff_shots():
         team_id=0,
         season_type_all_star='Playoffs',
         season_nullable='2025-26',
-        context_measure_simple='FGA'
+        context_measure_simple='FGA',
+        timeout=120
     )
     df = shot_data.get_data_frames()[0]
 
