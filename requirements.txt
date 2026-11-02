@@ -5,3 +5,5 @@ matplotlib
 plotly
 nba_api
 requests
+supabase
+python-dotenv
