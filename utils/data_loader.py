@@ -7,17 +7,22 @@ from supabase import create_client
 
 load_dotenv()
 
+
 def get_supabase():
-    # First try local .env credentials
     url = os.getenv("SUPABASE_URL")
     key = os.getenv("SUPABASE_KEY")
 
-    # If running on Streamlit Cloud, use Streamlit secrets
     if not url or not key:
-        url = st.secrets["SUPABASE_URL"]
-        key = st.secrets["SUPABASE_KEY"]
+        url = st.secrets.get("SUPABASE_URL")
+        key = st.secrets.get("SUPABASE_KEY")
+
+    if not url or not key:
+        raise RuntimeError(
+            "Missing Supabase credentials in Streamlit Cloud"
+        )
 
     return create_client(url, key)
+
 
 
 
