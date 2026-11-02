@@ -1,40 +1,59 @@
 
+import os
 import pandas as pd
-from nba_api.stats.endpoints import teamgamelogs
-from nba_api.stats.endpoints import shotchartdetail
-from nba_api.stats.endpoints import playergamelogs
+import streamlit as st
+from dotenv import load_dotenv
+from supabase import create_client
+
+load_dotenv()
+
+def get_supabase():
+    # First try local .env credentials
+    url = os.getenv("SUPABASE_URL")
+    key = os.getenv("SUPABASE_KEY")
+
+    # If running on Streamlit Cloud, use Streamlit secrets
+    if not url or not key:
+        url = st.secrets["SUPABASE_URL"]
+        key = st.secrets["SUPABASE_KEY"]
+
+    return create_client(url, key)
+
+
+
+@st.cache_data(ttl=900)
+def fetch_table(table_name):
+    supabase = get_supabase()
+    records = []
+    page_size = 500
+    offset = 0
+
+    while True:
+        response = (
+            supabase.table(table_name)
+            .select("stats")
+            .range(offset, offset + page_size - 1)
+            .execute()
+        )
+
+        batch = response.data
+        records.extend(row["stats"] for row in batch)
+
+        if len(batch) < page_size:
+            break
+
+        offset += page_size
+
+    return pd.DataFrame(records)
+
 
 def load_team_game_logs():
-    df = teamgamelogs.TeamGameLogs(
-        season_nullable='2026-27',
-        season_type_nullable='Regular Season',
-        timeout=60
-    ).get_data_frames()[0]
+    return fetch_table("team_game_logs")
 
-    # df['Possessions'] = 0.96*(((df['FGA'])+(df['TOV']))+0.44*(df['FTA'])-df['OREB'])
-    df['PTSA'] = df['PTS'] - df['PLUS_MINUS']
-    df['GAME_MIN'] = 5*df['MIN']
-
-    return df
 
 def get_regular_season_shots():
-    shot_data = shotchartdetail.ShotChartDetail(
-        player_id=0,
-        team_id=0,
-        season_type_all_star='Regular Season',
-        season_nullable='2026-27',
-        context_measure_simple='FGA',
-        timeout=120
-    )
-    df = shot_data.get_data_frames()[0]
+    return fetch_table("shot_chart")
 
-    return df
 
 def get_player_game_logs():
-    df = playergamelogs.PlayerGameLogs(
-        season_nullable='2026-27',
-        season_type_nullable='Regular Season',
-        timeout=60
-    ).get_data_frames()[0]
-
-    return df
+    return fetch_table("player_game_logs")
