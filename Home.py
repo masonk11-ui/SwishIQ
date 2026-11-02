@@ -7,6 +7,27 @@ from datetime import datetime
 import matplotlib.pyplot as plt
 import pandas as pd
 from zoneinfo import ZoneInfo
+import os
+
+st.title("Supabase Connection Test")
+
+st.write(
+    "Environment URL:",
+    bool(os.getenv("SUPABASE_URL"))
+)
+
+st.write(
+    "Streamlit URL:",
+    "SUPABASE_URL" in st.secrets
+)
+
+st.write(
+    "Streamlit Key:",
+    "SUPABASE_KEY" in st.secrets
+)
+
+st.stop()
+
 
 st.title("SwishIQ")
 st.write("Welcome to SwishIQ. Tracking team and player performance over the course of " \
