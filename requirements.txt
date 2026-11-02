@@ -7,3 +7,4 @@ nba_api
 requests
 supabase
 python-dotenv
+streamlit-aggrid
