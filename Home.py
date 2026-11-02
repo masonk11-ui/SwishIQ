@@ -64,10 +64,7 @@ team_metrics = team_metrics.sort_values(by='NET', ascending=False)
 
 st.subheader(f'Team Ratings & Per Game Stats — 2027 NBA Regular Season')
 
-eliminated_teams = ['Phoenix Suns', 'Denver Nuggets', 'Houston Rockets', 'Portland Trail Blazers',
-                    'Boston Celtics', 'Atlanta Hawks', 'Toronto Raptors', 'Orlando Magic', 'Philadelphia 76ers',
-                    'Detroit Pistons', 'Los Angeles Lakers', 'Minnesota Timberwolves', 'Cleveland Cavaliers', 
-                    'Oklahoma City Thunder', 'San Antonio Spurs']
+eliminated_teams = ['']
 
 team_metrics["TEAM"] = team_metrics["TEAM"].apply(
     lambda x: f"{x} (e)" if x in eliminated_teams else x
