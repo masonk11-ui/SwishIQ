@@ -21,17 +21,23 @@ def get_supabase():
 
 
 
-@st.cache_data(ttl=900)
+
+import time
+
+@st.cache_data(ttl=3600)
 def fetch_table(table_name):
+    start = time.perf_counter()
     supabase = get_supabase()
+
     records = []
-    page_size = 500
+    page_size = 1000
     offset = 0
 
     while True:
         response = (
             supabase.table(table_name)
             .select("stats")
+            .order("game_id")
             .range(offset, offset + page_size - 1)
             .execute()
         )
@@ -44,7 +50,17 @@ def fetch_table(table_name):
 
         offset += page_size
 
-    return pd.DataFrame(records)
+    df = pd.DataFrame(records)
+
+    elapsed = time.perf_counter() - start
+    print(
+        f"{table_name}: {len(df)} rows "
+        f"loaded in {elapsed:.2f} seconds",
+        flush=True
+    )
+
+    return df
+
 
 
 def load_team_game_logs():
