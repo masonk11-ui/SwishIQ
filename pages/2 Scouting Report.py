@@ -2,7 +2,7 @@ import streamlit as st
 import matplotlib.pyplot as plt
 from utils.court_plot import draw_court
 import pandas as pd
-from utils.data_loader import get_playoff_shots, get_player_game_logs
+from utils.data_loader import get_regular_season_shots, get_player_game_logs
 from nba_api.stats.endpoints import playergamelogs
 from utils.play_style import team_play_types_freq
 import plotly.express as px
@@ -18,7 +18,7 @@ st.write("Explore team and player offensive profiles over the 2026 NBA Playoffs.
 
 @st.cache_data
 def get_shots():
-    return get_playoff_shots()
+    return get_regular_season_shots()
 
 
 @st.cache_data

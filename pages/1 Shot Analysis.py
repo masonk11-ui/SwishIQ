@@ -2,7 +2,7 @@ import streamlit as st
 import matplotlib.pyplot as plt
 from utils.court_plot import draw_court
 import pandas as pd
-from utils.data_loader import get_playoff_shots
+from utils.data_loader import get_regular_season_shots
 
 st.markdown("""
 <style>
@@ -92,7 +92,7 @@ st.divider()
 
 @st.cache_data
 def get_shots():
-    return get_playoff_shots()
+    return get_regular_season_shots()
 
 
 def classify_shot_loc(x):

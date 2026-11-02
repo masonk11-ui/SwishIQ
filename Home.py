@@ -10,7 +10,7 @@ from zoneinfo import ZoneInfo
 
 st.title("SwishIQ")
 st.write("Welcome to SwishIQ. Tracking team and player performance over the course of " \
-"the 2026 NBA playoffs.")
+"the 2027 NBA Season.")
 st.divider()
 
 
@@ -60,7 +60,7 @@ team_metrics = team_metrics.rename(columns = {
 
 team_metrics = team_metrics.sort_values(by='NET', ascending=False)
 
-st.subheader(f'Team Ratings & Per Game Stats — 2026 NBA Playoffs')
+st.subheader(f'Team Ratings & Per Game Stats — 2027 NBA Regular Season')
 
 eliminated_teams = ['Phoenix Suns', 'Denver Nuggets', 'Houston Rockets', 'Portland Trail Blazers',
                     'Boston Celtics', 'Atlanta Hawks', 'Toronto Raptors', 'Orlando Magic', 'Philadelphia 76ers',
